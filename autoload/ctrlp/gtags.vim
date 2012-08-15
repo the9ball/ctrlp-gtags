@@ -19,15 +19,20 @@ else
 endif
 
 function! ctrlp#gtags#init()
-	let s = ''
-	redir => s
-	!global -f %
-	redir END
-	return	split( s, '\n' )[1:]
+	let l:s = input( 'Source:' )
+	if empty( l:s )
+		"let l:s = expand( '%' )
+		let l:s = "a.cpp"
+	endif
+	let l:s = system( 'global -x ' . l:s )
+	return split( l:s, "\n" ) "[1:]
 endfunction
 
 function! ctrlp#gtags#accept( mode, str )
-	call ctlp#exit()
+	call ctrlp#exit()
+		let l:str = substitute( a:str, '\s\+', ' ', 'g' )
+		let l:list = split( l:str, " " )
+		execute 'edit +' . l:list[1] . ' ' . l:list[2]
 endfunction
 
 function! ctrlp#gtags#exit()
@@ -40,4 +45,5 @@ let s:id = g:ctlp_buildlines + len( g:ctrlp_ext_vars )
 function! ctrlp#gtags#id()
 	return s:id
 endfunction
+
 
