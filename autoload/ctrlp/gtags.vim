@@ -1,4 +1,4 @@
-if exists('g:loaded_ctrlp_gtags') && g:loaded_ctrlp_gtags
+if exists( 'g:loaded_ctrlp_gtags' ) && g:loaded_ctrlp_gtags
 	finish
 endif
 let g:loaded_ctrlp_gtags = 1
@@ -7,9 +7,9 @@ let s:mark_var = {
 	\  'init':   'ctrlp#gtags#init()',
 	\  'exit':   'ctrlp#gtags#exit()',
 	\  'accept': 'ctrlp#gtags#accept',
-	\  'lname':  'mark',
-	\  'sname':  'mark',
-	\  'type':   'mark',
+	\  'lname':  'gtags',
+	\  'sname':  'gtags',
+	\  'type':   'gtags',
 	\  'sort':   0,
 	\}
 if exists( 'g:ctrlp_ext_vars' ) && !empty( g:ctrlp_ext_vars )
@@ -19,15 +19,23 @@ else
 endif
 
 function! ctrlp#gtags#init()
-	return	["test", "1", "2", "3"]
+	let s = ''
+	redir => s
+	!global -f %
+	redir END
+	return	split( s, '\n' )[1:]
 endfunction
 
-function! ctrlp#gtags#accept()
+function! ctrlp#gtags#accept( mode, str )
+	call ctlp#exit()
 endfunction
 
 function! ctrlp#gtags#exit()
 endfunction
 
+if !exists( 'g:ctlp_buildlines' )
+	let g:ctlp_buildlines = 0
+endif
 let s:id = g:ctlp_buildlines + len( g:ctrlp_ext_vars )
 function! ctrlp#gtags#id()
 	return s:id
