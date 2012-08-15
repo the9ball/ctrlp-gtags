@@ -22,7 +22,7 @@ function! ctrlp#gtags#f#init()
 	let l:s = input( 'Source:' )
 	if empty( l:s )
 		"let l:s = expand( '%' )
-		let l:s = "a.cpp"
+		return []
 	endif
 	let l:s = system( 'global -f ' . l:s )
 	return split( l:s, "\n" ) "[1:]

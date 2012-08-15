@@ -21,8 +21,7 @@ endif
 function! ctrlp#gtags#init()
 	let l:s = input( 'Source:' )
 	if empty( l:s )
-		"let l:s = expand( '%' )
-		let l:s = "a.cpp"
+		return []
 	endif
 	let l:s = system( 'global -x ' . l:s )
 	return split( l:s, "\n" ) "[1:]
