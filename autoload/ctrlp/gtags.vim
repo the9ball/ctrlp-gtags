@@ -37,10 +37,7 @@ endfunction
 function! ctrlp#gtags#exit()
 endfunction
 
-if !exists( 'g:ctlp_buildlines' )
-	let g:ctlp_buildlines = 0
-endif
-let s:id = g:ctlp_buildlines + len( g:ctrlp_ext_vars )
+let s:id = g:ctrlp_builtins + len( g:ctrlp_ext_vars )
 function! ctrlp#gtags#id()
 	return s:id
 endfunction
