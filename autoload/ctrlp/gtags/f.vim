@@ -21,8 +21,7 @@ endif
 function! ctrlp#gtags#f#init()
 	let l:s = input( 'Source:' )
 	if empty( l:s )
-		"let l:s = expand( '%' )
-		return []
+		let l:s = v:oldfiles[0]
 	endif
 	let l:s = system( 'global -f ' . l:s )
 	return split( l:s, "\n" ) "[1:]
