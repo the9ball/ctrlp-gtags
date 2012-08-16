@@ -19,9 +19,9 @@ else
 endif
 
 function! ctrlp#gtags#f#init()
-	let l:s = input( 'Source:' )
+	let l:s = input( 'Source ( empty : '.s:filename.' ) : ' )
 	if empty( l:s )
-		let l:s = v:oldfiles[0]
+		let l:s = s:filename
 	endif
 	let l:s = system( 'global -f ' . l:s )
 	return split( l:s, "\n" ) "[1:]
@@ -37,8 +37,10 @@ endfunction
 function! ctrlp#gtags#f#exit()
 endfunction
 
+let s:filename = ''
 let s:id = g:ctrlp_builtins + len( g:ctrlp_ext_vars )
 function! ctrlp#gtags#f#id()
+	let s:filename = expand('%')
 	return s:id
 endfunction
 

@@ -19,9 +19,9 @@ else
 endif
 
 function! ctrlp#gtags#x#init()
-	let l:s = input( 'Source:' )
+	let l:s = input( 'Source ( empty : '.s:word.' ) : ' )
 	if empty( l:s )
-		return []
+		let l:s = s:word
 	endif
 	let l:s = system( 'global -x ' . l:s )
 	return split( l:s, "\n" ) "[1:]
@@ -37,9 +37,10 @@ endfunction
 function! ctrlp#gtags#x#exit()
 endfunction
 
+let s:word = ''
 let s:id = g:ctrlp_builtins + len( g:ctrlp_ext_vars )
 function! ctrlp#gtags#x#id()
+	let s:word = expand('<cword>')
 	return s:id
 endfunction
-
 
