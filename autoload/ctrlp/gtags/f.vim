@@ -19,12 +19,24 @@ else
 endif
 
 function! ctrlp#gtags#f#init()
+	" 入力ソース
 	let l:s = input( 'Source ( empty : '.s:filename.' ) : ' )
 	if empty( l:s )
 		let l:s = s:filename
 	endif
-	let l:s = system( 'global -f ' . l:s )
-	return split( l:s, "\n" ) "[1:]
+
+	" GTAGSファイルの場所を指定する。
+	let l:p = $GTAGSROOT
+	if empty( l:p )
+		let l:p = s:cdir
+	endif
+
+	" コマンドを生成して実行
+	let l:c = "GTAGSROOT=\'" . l:p . "\' global -af " . l:s
+	let l:s = system( l:c )
+
+	" リスト化して返す
+	return split( l:s, "\n" )
 endfunction
 
 function! ctrlp#gtags#f#accept( mode, str )
@@ -38,9 +50,18 @@ function! ctrlp#gtags#f#exit()
 endfunction
 
 let s:filename = ''
-let s:id = g:ctrlp_builtins + len( g:ctrlp_ext_vars )
+let s:cdir = ''
 function! ctrlp#gtags#f#id()
-	let s:filename = expand('%')
-	return s:id
+	" カレントファイル名
+	let s:filename = expand('%:p')
+
+	" カレントディレクトリ
+	redir => s:cdir
+	pwd
+	redir END
+	let s:cdir = substitute( s:cdir, "\n", "", "g" )
+
+	" ID
+	return g:ctrlp_builtins + len( g:ctrlp_ext_vars )
 endfunction
 

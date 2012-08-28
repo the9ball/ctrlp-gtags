@@ -19,12 +19,24 @@ else
 endif
 
 function! ctrlp#gtags#x#init()
+	" 入力ソース
 	let l:s = input( 'Source ( empty : '.s:word.' ) : ' )
 	if empty( l:s )
 		let l:s = s:word
 	endif
-	let l:s = system( 'global -x ' . l:s )
-	return split( l:s, "\n" ) "[1:]
+
+	" GTAGSファイルの場所を指定する。
+	let l:p = $GTAGSROOT
+	if empty( l:p )
+		let l:p = s:cdir
+	endif
+
+	" コマンドを生成して実行
+	let l:c = "GTAGSROOT=\'" . l:p . "\' global -ax " . l:s
+	let l:s = system( l:c )
+
+	" リスト化して返す
+	return split( l:s, "\n" )
 endfunction
 
 function! ctrlp#gtags#x#accept( mode, str )
@@ -38,9 +50,18 @@ function! ctrlp#gtags#x#exit()
 endfunction
 
 let s:word = ''
-let s:id = g:ctrlp_builtins + len( g:ctrlp_ext_vars )
+let s:cdir = ''
 function! ctrlp#gtags#x#id()
+	" カーソル下のワード
 	let s:word = expand('<cword>')
-	return s:id
+
+	" カレントディレクトリ
+	redir => s:cdir
+	pwd
+	redir END
+	let s:cdir = substitute( s:cdir, "\n", "", "g" )
+
+	" ID
+	return g:ctrlp_builtins + len( g:ctrlp_ext_vars )
 endfunction
 
